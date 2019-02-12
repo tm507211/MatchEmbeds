@@ -37,9 +37,17 @@ Structure<std::string, std::string, Signature> read_struct_file(std::ifstream& i
   std::string var;
   std::vector<std::string> vars;
   char quote(0);
+  bool comment(false);
 
   while (ins && state < 4) {
     ins.get(c);
+    if (c == '#') {
+      comment = true;
+    }
+    if (comment) {
+      if (c == '\n') comment = false; // end comment on new line
+      continue;
+    }
     if (c == '\'' || c == '\"') {
       if (quote == c) {
         quote = 0;
